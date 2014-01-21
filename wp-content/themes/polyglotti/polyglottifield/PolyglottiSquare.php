@@ -121,7 +121,58 @@ class acf_field_polyglotti_square extends acf_field
                 // create Field HTML
                 ?>
                 <div>
+                    <table id="carre_polyglotti">
+                        <form>
+                        <tr>
+                            <td>
+                                <h3> Nombres </h3>
+                                <input type="text" name="nombres" />
+                            </td>
 
+                            <td>
+                                <h3> Personnes</h3>
+                                <input type="text" name="personnes" />
+                            </td>
+
+                            <td>
+                                <h3> Temps </h3>
+                                <input type="text" name="temps" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <h3>Qualité</h3>
+                                <input type="text" name="qualite" />
+                            </td>
+
+                            <td>
+                                <h3> Actions </h3>
+                                <input type="text" name="actions" />
+                            </td>
+
+                            <td>
+                                <h3> Espace </h3>
+                                <input type="text" name="espace" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <h3>Affirmation négative</h3>
+                                <input type="text" name="negation" />
+                            </td>
+
+                            <td>
+                                <h3>Objets</h3>
+                                <input type="text" name="objets" />
+                            </td>
+
+                            <td>
+                                <h3>Questions</h3>
+                                <input type="text" name="questions" />
+                            </td>
+                        </tr>
+                    </form>
+                    </table>
                 </div>
                 <?php
         }
