@@ -212,7 +212,7 @@ function phrases() {
         'rewrite'             => $rewrite,
         'capability_type'     => 'page',
     );
-    register_post_type( 'phrases', $args );
+    register_post_type('phrases', $args );
 
 }
 
@@ -232,3 +232,15 @@ add_action( 'init', 'phrases', 0 );
 
 // add_action('wp_insert_post', 'wpc_champs_personnalises_defaut');
 
+add_filter('pll_get_post_types', 'my_pll_get_post_types');
+function my_pll_get_post_types($types)
+{
+    return array_merge($types, array('phrases', 'phrases'));
+}
+
+add_action('acf/register_fields', 'my_register_fields');
+
+function my_register_fields()
+{
+    include_once('PolyglottiSquare.php');
+}
