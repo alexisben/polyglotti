@@ -19,7 +19,18 @@ require 'lesson-pannel.php';
 //    )
 //));
 
+function add_menu_icons_styles(){
+?>
 
+<style>
+#adminmenu .menu-icon-events div.wp-menu-image:before {
+  content: "\f101";
+}
+</style>
+
+<?php
+}
+add_action( 'admin_head', 'add_menu_icons_styles' );
 // Enable thumbnails
 add_theme_support( 'post-thumbnails' );
 set_post_thumbnail_size(200, 200, true); // Normal post thumbnails
@@ -204,7 +215,7 @@ function phrases() {
         'show_in_nav_menus'   => true,
         'show_in_admin_bar'   => true,
         'menu_position'       => 5,
-        'menu_icon'           => '',
+        'menu_icon'           => 'dashicons-admin-comments',
         'can_export'          => true,
         'has_archive'         => false,
         'exclude_from_search' => false,
@@ -236,11 +247,4 @@ add_filter('pll_get_post_types', 'my_pll_get_post_types');
 function my_pll_get_post_types($types)
 {
     return array_merge($types, array('phrases', 'phrases'));
-}
-
-add_action('acf/register_fields', 'my_register_fields');
-
-function my_register_fields()
-{
-    include_once('polyglottifield/PolyglottiSquare.php');
 }

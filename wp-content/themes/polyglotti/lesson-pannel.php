@@ -46,26 +46,28 @@ function render_pannel() {
         <form id="lesson-options" action="" method="post" enctype="multipart/form-data">
             <input type="hidden" name="MAX_FILE_SIZE" value="30000" />
             <input type='file' id='csv' name='csv' size='40' value='' />
-            <input id='upload_button' type='submit' class='button' value='<?php _e('Upload Leçon', 'lesson'); ?>' />
+            <input id='upload_button' type='submit' name='submit' class='button' value='<?php _e('Upload Leçon', 'lesson'); ?>' />
         </form>
     </div>
 
 <?php
-    $upload_dir = wp_upload_dir();
-    $path = $upload_dir['path'];
+    if(isset($_POST['submit'])) {
+        $upload_dir = wp_upload_dir();
+        $path = $upload_dir['path'];
 
-    $latest_ctime = 0;
-    $latest_filename = '';
+        $latest_ctime = 0;
+        $latest_filename = '';
 
-    $d = dir($path);
-    while (false !== ($entry = $d->read())) {
-        $filepath = "{$path}/{$entry}";
-        if (is_file($filepath) && filectime($filepath) > $latest_ctime) {
-            $latest_ctime = filectime($filepath);
-            $latest_filename = $entry;
+        $d = dir($path);
+        while (false !== ($entry = $d->read())) {
+            $filepath = "{$path}/{$entry}";
+            if (is_file($filepath) && filectime($filepath) > $latest_ctime) {
+                $latest_ctime = filectime($filepath);
+                $latest_filename = $entry;
+            }
         }
+        parse_csv($latest_filename);
     }
-    parse_csv($latest_filename);
 }
 
 function parse_csv($file) {
@@ -130,6 +132,24 @@ function parse_csv($file) {
 
             // details for the post we're about to insert
             $my_post = array(
+              'post_title'            => $french,
+              'post_status'           => 'publish',
+              'post_type'             => 'phrases',
+              'post_author'           => $user_ID,
+              'ping_status'           => get_option('default_ping_status'),
+              'post_parent'           => 0,
+              'menu_order'            => 0,
+              'lang'                  => 'fr',
+              'to_ping'               =>  '',
+              'pinged'                => '',
+              'post_password'         => '',
+              'guid'                  => '',
+              'post_content_filtered' => '',
+              'post_excerpt'          => '',
+              'import_id'             => 0
+            );
+
+            $polyglotti_content = array(
               'id'  => $lesson_id,
               'french'   => $french,
               'chinese' => $chinese,
@@ -137,13 +157,13 @@ function parse_csv($file) {
               'english' => $english
             );
 
-            print_r($my_post);
+            print_r($polyglotti_content);
 
             // Inserts and publishes a new post into the database
-            // $postid = wp_insert_post( $my_post );
+            //$postid = wp_insert_post($my_post);
 
-            // // add the custom fields for each post
-            // add_post_meta($postid, 'custom_field1', $custom_field1);
+            // add the custom fields for each post
+            //add_post_meta($postid, 'n_lecon', $polyglotti_content['id']);
             // add_post_meta($postid, 'custom_field2', $custom_field2);
             // add_post_meta($postid, 'date', $newdate);
 
@@ -155,6 +175,47 @@ function parse_csv($file) {
         break;
 
     }
+
+        // TEST
+        $my_post_test = array(
+              'post_title'            => 'Bonjour',
+              'post_status'           => 'publish',
+              'post_type'             => 'phrases',
+              'post_author'           => $user_ID,
+              'ping_status'           => get_option('default_ping_status'),
+              'post_parent'           => 0,
+              'menu_order'            => 0,
+              'lang'                  => 'fr',
+              'to_ping'               =>  '',
+              'pinged'                => '',
+              'post_password'         => '',
+              'guid'                  => '',
+              'post_content_filtered' => '',
+              'post_excerpt'          => '',
+              'import_id'             => 0
+        );
+
+        wp_insert_post($my_post_test);
+
+        $my_post_test2 = array(
+              'post_title'            => 'Hello',
+              'post_status'           => 'publish',
+              'post_type'             => 'phrases',
+              'post_author'           => $user_ID,
+              'ping_status'           => get_option('default_ping_status'),
+              'post_parent'           => 0,
+              'menu_order'            => 0,
+              'lang'                  => 'es',
+              'to_ping'               =>  '',
+              'pinged'                => '',
+              'post_password'         => '',
+              'guid'                  => '',
+              'post_content_filtered' => '',
+              'post_excerpt'          => '',
+              'import_id'             => 0
+            );
+
+        $postid = wp_insert_post($my_post_test2);
 
     exit;
 }
