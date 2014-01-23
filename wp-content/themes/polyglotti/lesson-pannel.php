@@ -86,6 +86,7 @@ function parse_csv($file) {
     $objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
     //setup foreach to work through all the rows and columns
     $worksheet = null;
+    $maxlessonId = null;
 
     foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
 
@@ -115,7 +116,7 @@ function parse_csv($file) {
 
             // details for the post we're about to insert
             $my_post = array(
-              'post_title'            => $french,
+              'post_title'            => $fr,
               'post_status'           => 'publish',
               'post_type'             => 'phrases',
               'post_author'           => $user_ID,
@@ -286,12 +287,15 @@ function parse_csv($file) {
                 add_post_meta($postid, $key, $value);
             }
 
+            $maxlessonId = $lesson;
             print_r($phrase_data);
             echo "<i><b>Successfully inserted post " . $postid . " to the WordPress DB</i></b><br /><br />";
         }
         }
-        break;
+        //break;
 
     }
+    echo $maxlessonId;
+    generate_lesson($maxlessonId);
     exit;
 }

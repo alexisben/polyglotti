@@ -31,6 +31,21 @@ function add_menu_icons_styles(){
 <?php
 }
 add_action( 'admin_head', 'add_menu_icons_styles' );
+
+
+function add_menu_icons_styles2(){
+?>
+
+<style>
+#adminmenu .menu-icon-events div.wp-menu-image:before {
+    content: "\f118";
+}
+</style>
+
+<?php
+}
+add_action( 'admin_head', 'add_menu_icons_styles2' );
+
 // Enable thumbnails
 add_theme_support( 'post-thumbnails' );
 set_post_thumbnail_size(200, 200, true); // Normal post thumbnails
@@ -241,11 +256,48 @@ add_action( 'init', 'phrases', 0 );
 //  }
 
 // add_action('wp_insert_post', 'wpc_champs_personnalises_defaut');
+add_action( 'init', 'register_cpt_leçon' );
 
-add_filter('pll_get_post_types', 'my_pll_get_post_types');
-function my_pll_get_post_types($types)
-{
-    return array_merge($types, array('phrases', 'phrases'));
+function register_cpt_leçon() {
+
+    $labels = array(
+        'name' => _x( 'Leçons', 'leçon' ),
+        'singular_name' => _x( 'Leçon', 'leçon' ),
+        'add_new' => _x( 'Nouvelle leçon', 'leçon' ),
+        'add_new_item' => _x( 'Ajouter une nouvelle leçon', 'leçon' ),
+        'edit_item' => _x( 'Editer la leçon', 'leçon' ),
+        'new_item' => _x( 'Nouvelle leçon', 'leçon' ),
+        'view_item' => _x( 'Voir la leçon', 'leçon' ),
+        'search_items' => _x( 'Rechercher dans les leçons', 'leçon' ),
+        'not_found' => _x( 'Pas de leçons trouvée', 'leçon' ),
+        'not_found_in_trash' => _x( 'No leçons found in Trash', 'leçon' ),
+        'parent_item_colon' => _x( 'Parent Leçon:', 'leçon' ),
+        'menu_name' => _x( 'Leçons', 'leçon' ),
+    );
+
+    $args = array(
+        'labels' => $labels,
+        'hierarchical' => true,
+        'description' => 'Entrez ici les divers contenus de votre leçon, tel que les commentaires culturels et grammaticaux !',
+        'supports' => array( 'title', 'editor', 'author' ),
+
+        'public' => true,
+        'show_ui' => true,
+        'show_in_menu' => true,
+        'menu_position' => 20,
+        'menu_icon'     => 'dashicons-welcome-learn-more',
+
+        'show_in_nav_menus' => true,
+        'publicly_queryable' => true,
+        'exclude_from_search' => false,
+        'has_archive' => true,
+        'query_var' => true,
+        'can_export' => true,
+        'rewrite' => true,
+        'capability_type' => 'post'
+    );
+
+    register_post_type('leçon', $args);
 }
 
 if(function_exists("register_field_group"))
@@ -1738,4 +1790,9 @@ if(function_exists("register_field_group"))
         ),
         'menu_order' => 0,
     ));
+}
+
+function generate_lesson($number)
+{
+
 }
