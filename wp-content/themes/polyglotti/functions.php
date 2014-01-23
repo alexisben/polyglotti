@@ -256,23 +256,23 @@ add_action( 'init', 'phrases', 0 );
 //  }
 
 // add_action('wp_insert_post', 'wpc_champs_personnalises_defaut');
-add_action( 'init', 'register_cpt_leçon' );
+add_action( 'init', 'register_cpt_lesson' );
 
-function register_cpt_leçon() {
+function register_cpt_lesson() {
 
     $labels = array(
-        'name' => _x( 'Leçons', 'leçon' ),
-        'singular_name' => _x( 'Leçon', 'leçon' ),
-        'add_new' => _x( 'Nouvelle leçon', 'leçon' ),
-        'add_new_item' => _x( 'Ajouter une nouvelle leçon', 'leçon' ),
-        'edit_item' => _x( 'Editer la leçon', 'leçon' ),
-        'new_item' => _x( 'Nouvelle leçon', 'leçon' ),
-        'view_item' => _x( 'Voir la leçon', 'leçon' ),
-        'search_items' => _x( 'Rechercher dans les leçons', 'leçon' ),
-        'not_found' => _x( 'Pas de leçons trouvée', 'leçon' ),
-        'not_found_in_trash' => _x( 'No leçons found in Trash', 'leçon' ),
-        'parent_item_colon' => _x( 'Parent Leçon:', 'leçon' ),
-        'menu_name' => _x( 'Leçons', 'leçon' ),
+        'name' => _x( 'Leçons', 'lesson' ),
+        'singular_name' => _x( 'Leçon', 'lesson' ),
+        'add_new' => _x( 'Nouvelle leçon', 'lesson' ),
+        'add_new_item' => _x( 'Ajouter une nouvelle leçon', 'lesson' ),
+        'edit_item' => _x( 'Editer la leçon', 'lesson' ),
+        'new_item' => _x( 'Nouvelle leçon', 'lesson' ),
+        'view_item' => _x( 'Voir la leçon', 'lesson' ),
+        'search_items' => _x( 'Rechercher dans les leçons', 'lesson' ),
+        'not_found' => _x( 'Pas de leçons trouvée', 'lesson' ),
+        'not_found_in_trash' => _x( 'No leçons found in Trash', 'lesson' ),
+        'parent_item_colon' => _x( 'Parent Leçon:', 'lesson' ),
+        'menu_name' => _x( 'Leçons', 'lesson' ),
     );
 
     $args = array(
@@ -297,7 +297,7 @@ function register_cpt_leçon() {
         'capability_type' => 'post'
     );
 
-    register_post_type('leçon', $args);
+    register_post_type('lesson', $args);
 }
 
 if(function_exists("register_field_group"))
@@ -1792,7 +1792,106 @@ if(function_exists("register_field_group"))
     ));
 }
 
+if(function_exists("register_field_group"))
+{
+    register_field_group(array (
+        'id' => 'acf_contenu-de-lecon',
+        'title' => 'Contenu de Leçon',
+        'fields' => array (
+            array (
+                'key' => 'field_52e0e4f559fce',
+                'label' => 'Numéro de leçon',
+                'name' => 'numero_de_lecon',
+                'type' => 'number',
+                'instructions' => 'Le numéro de la leçon, utilisé pour faciliter les requêtes, à ne pas modifier !',
+                'required' => 1,
+                'default_value' => '',
+                'placeholder' => '',
+                'prepend' => '',
+                'append' => '',
+                'min' => '',
+                'max' => '',
+                'step' => '',
+            ),
+            array (
+                'key' => 'field_52e0e3d84700d',
+                'label' => 'Commentaires Culturels',
+                'name' => 'commentaires_culturels',
+                'type' => 'wysiwyg',
+                'default_value' => '',
+                'toolbar' => 'full',
+                'media_upload' => 'yes',
+            ),
+            array (
+                'key' => 'field_52e0e4064700e',
+                'label' => 'Commentaires Grammaticaux',
+                'name' => 'commentaires_grammaticaux',
+                'type' => 'wysiwyg',
+                'default_value' => '',
+                'toolbar' => 'full',
+                'media_upload' => 'yes',
+            ),
+        ),
+        'location' => array (
+            array (
+                array (
+                    'param' => 'post_type',
+                    'operator' => '==',
+                    'value' => 'lesson',
+                    'order_no' => 0,
+                    'group_no' => 0,
+                ),
+            ),
+        ),
+        'options' => array (
+            'position' => 'normal',
+            'layout' => 'default',
+            'hide_on_screen' => array (
+                0 => 'the_content',
+            ),
+        ),
+        'menu_order' => 0,
+    ));
+}
+
+
 function generate_lesson($number)
 {
+    echo "test";
+    if(!($query = new WP_Query(array('post_type' => 'lesson'))))
+        echo "erreur";
 
+    for($i = 1; $i <= $number; $i++)
+    {
+        while($query->have_posts())
+        {
+            $query->the_post();
+
+            if(get_post_meta($post->ID, "n_lecon", true) != $i)
+            {
+                $my_post = array(
+                  'post_title'            => "Leçon ". $i,
+                  'post_status'           => 'publish',
+                  'post_type'             => 'lessons',
+                  'post_author'           => $user_ID,
+                  'ping_status'           => get_option('default_ping_status'),
+                  'post_parent'           => 0,
+                  'menu_order'            => 0,
+                  'lang'                  => 'fr',
+                  'to_ping'               =>  '',
+                  'pinged'                => '',
+                  'post_password'         => '',
+                  'guid'                  => '',
+                  'post_content_filtered' => '',
+                  'post_excerpt'          => '',
+                  'import_id'             => 0
+                );
+
+                $postid = wp_insert_post($my_post);
+                add_post_meta($postid, "n_lecon", $i);
+            }
+        }
+
+        $query->rewind_posts();
+    }
 }
